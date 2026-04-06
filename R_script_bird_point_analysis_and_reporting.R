@@ -92,22 +92,29 @@ pc_data2 <- rename(pc_data2, "G20-1" = "G20-1 Latest")
 # The location names can be reordered based on the numbers.
 # In this case, we will reorder gomala numbers
 
-# Get all column names except "Common.Name"
+# For this, get all column names except "Common.Name"
 col_names <- names(pc_data2)[-1]
 
 # Function to extract numeric parts for sorting
 extract_numbers <- function(x) {
-  parts <- strsplit(sub("G", "", x), "-")[[1]]
-  as.numeric(parts[1]) * 100 + as.numeric(parts[2]) # Multiply by 100 to prioritize first number
+  parts <- strsplit(sub("G", "", x), "-")[[1]]  # Removes the letter G (substitutes it with nothing),
+  # and then splits the remaining terms into two and retains it as a list.For example, "20-2" → list(c("20", "2"))
+  as.numeric(parts[1]) * 100 + as.numeric(parts[2]) # parts[1] is the first element (i.e. "20")
+  # as.numeric(parts[1]) converts it to the number 12
+  # parts[2] is the second element (i.e., "2")
+  # as.numeric(parts[2]) converts it to number 2
+  # Then it performs: 20 * 100 + 2 = 2002 (multiplied by 100 to prioritise the first number)            
 }
 
 # Sort column names numerically
 sorted_cols <- col_names[order(sapply(col_names, extract_numbers))]
 
-#You will get a warning message like below if you have any gomala number different
+# You will get a warning message like below if you have any location number different
 # from the usual alphanumeric pattern with a space-less hyphen in between
 # Warning message:
 #   In FUN(X[[i]], ...) : NAs introduced by coercion
+
+# Fix it before you proceed.
 
 # Reorder the dataframe columns
 pc_data2 <- pc_data2[, c("Common.Name", sorted_cols)]
@@ -115,23 +122,27 @@ pc_data2 <- pc_data2[, c("Common.Name", sorted_cols)]
 # Verify the new order
 names(pc_data2)
 
-#install.packages("fossil")
+# Install a package necessary for the species accumulation curve
+# install.packages("fossil")
 library("fossil")
 
-# spp.est is the R equivalent of the software EstimateS.
+# spp.est is the R equivalent of the software EstimateS. It is found within the package "fossil".
 # Reference for the spp.est function 
-# https://palaeo-electronica.org/2011_1/238/estimate.htm#:~:text=The%20spp.,of%20randomizations%20should%20be%20run.
+# https://palaeo-electronica.org/2011_1/238/estimate.htm#:~:text=The%20spp.,of%20randomizations%20should%20be%20run
 
-#Remove the species name column
+# Remove the species name column (the first column)
 pc_data3 <- pc_data2[,-1]
 
+# Use the spp.est function
 est <- as.data.frame(spp.est(pc_data3, rand = 999, abund = TRUE, counter = FALSE))
-#If you see it, ignore the warnings which reads "This data appears to be presence/absence based, 
-#but this estimator is for abundance data only". It's likely misreading abundance data as 
-#"presence/absence" due to the high number of 0 and 1.
+# If you see it, ignore the warnings which reads "This data appears to be presence/absence based, 
+# but this estimator is for abundance data only". It's likely misreading abundance data as 
+# "presence/absence" due to the high number of 0 and 1 (if your data has a lot of species with 
+# 0 and 1s.
 
-#Plotting SAC with 95% CI
+# Plotting SAC with 95% CI
 
+# Have a look at the estimates.
 glimpse(est)
 
 # Rows: 31
@@ -150,8 +161,8 @@ glimpse(est)
 # $ `Jack1(upper)` <dbl> 30.91454, 43.46089, 51.42452, 57.56340, 61.72669, 66.24275, 69.27235, 72.54485, 74.35457, 77.18826, 78.8…
 # $ `Jack1(lower)` <dbl> 4.162147, 14.927207, 23.242874, 29.004899, 34.670821, 38.804546, 41.607560, 45.230399, 48.132421, 50.580…
 
-#Get the meta-data (no. of species and no. of individuals per site)
-#Look at structure of the data first
+# Get the meta-data (no. of species and no. of individuals per site)
+# Look at structure of the data first (OPTIONAL)
 View(pc_data2)
 
 # Calculate total individuals per site (column sums) where pc_data3 is the site data
@@ -202,11 +213,12 @@ print(meta)
 #Combine "est" and "meta"
 metest <- cbind(est, meta)
 head(metest)
-#Plot
 
+# Plot
+                          
+# Load in the "ggplot2" package for plotting the species accumulation curve with the site-wise 
+# abundance and species counts
 library(ggplot2)
-
-# With Prosopis 7,8,15,20
 
 SAC <- ggplot(metest, aes(x = factor(site, levels = unique(site)), y = S.obs)) +
   # Bars for species count (black)
@@ -243,27 +255,34 @@ SAC <- ggplot(metest, aes(x = factor(site, levels = unique(site)), y = S.obs)) +
 
 print(SAC)
 
-#Save in a specified width and height format with publication ready 300 dots per
-#inch resolution
+# Save in a specified width and height format with publication ready 300 dots per
+# inch resolution
 ggsave("SAC_winter_2026.png", width = 12, height = 7, dpi = 300)
 
-#Print out the table of species and their numbers in each site
-#We will have to split the data since there are too many sites
+# Print out the table of species and their numbers in each site.
+# We will have to split the data since there are too many sites to represented
+# in an A4 size sheet.
 
-#Check the structure of pc_data2
+# Check the structure of pc_data2 (OPTIONAL).
 str(pc_data2)
 
-#Rename the common name column:
+# Rename the "Common.Name" column to "Species":
 pc_data2 <- pc_data2 %>% rename('Species' = Common.Name)
 
-# #Select only the required columns (splitting so that the tables don't look cluttered):
+# Select only the required columns (splitting so that the tables don't look cluttered)
+# The first column contains the species names. So, that's selected for both the objects:
 data1 <- pc_data2[c(1:17)]
 data2 <- pc_data2[c(1,18:28)]
 
+# Load in a a package necessary for converting the data1 and data2 to flextable and then docx format:
 library(flextable)
 
-#Set flextable defaults to change size
+# Set flextable defaults to change size
+
+# Find the current defaults first                          
 get_flextable_defaults()
+
+# Change the font size
 set_flextable_defaults(font.size = 8)
 
 #data1
