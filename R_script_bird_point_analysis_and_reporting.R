@@ -511,32 +511,64 @@ proportions$Species[proportions$`% occurrence across point counts` == max(propor
 # Find the max proportion of the species with the maximum % occurrence:
 max(proportions$`% occurrence across point counts`)
 # [1] 88.89
+                          
+# Create a column in pc_data2 which shows the number of individuals of each species
+# across sites
+pc_data2$total_count <- rowSums(pc_data2[, -1])
 
+# Check the number of individuals of the species with the maximum number
+# of individuals recorded across the sites
+max(pc_data2$total_count)
+# [1] 197
+# Check the number of individuals of the species with the minimum number
+# of individuals recorded across the sites (this will most certainly remain 1 every time)
+min(pc_data2$total_count)
+# [1] 1
+
+# The information that you can get from the following section can also be derived from
+# species accumulation plot. But it makes the job easier.
+                          
 # Create a column in pc_data2 which shows the number of sites where a species
 # was present/detected
-pc_data2$presence_count <- rowSums(pc_data2[, -1] > 0)
+pc_data2$presence_count <- rowSums(pc_data2[, c(-1, -ncol(pc_data2))] > 0)
 
 # Check the number of sites occupied by the species occurring in the maximum number
 # of sites
 max(pc_data2$presence_count)
 # [1] 24
 # Check the number of sites occupied by the species occurring in the minimum number
-# of sites (this will most certainly remain 1 everytime)
+# of sites (this will most certainly remain 1 every time)
 min(pc_data2$presence_count)
 # [1] 1
 
-# Create a row in pc_data2 which shows the total number of individuals detected in
-# in point count site
-
-# Calculate column sums for all numeric columns
-col_totals <- colSums(pc_data2[, -1], na.rm = TRUE)
-
-# Create new row as a data frame
-new_row <- data.frame(t(c(Species = "Total Individuals", col_totals)))
-
+# Create a row in pc_data2 which shows the total number of species detected in
+# in each point count site
 
 # Calculate column sums for all numeric columns (number of species)
 species_totals <- colSums(pc_data2[, -1] > 0)
+
+species_totals
+# G3-1           G3-2           G3-3           G3-4           G4-1           G4-2           G5-1           G6-1 
+# 8             19             17              8             13              8             19             10 
+# G6-2           G7-1           G7-2           G8-1           G8-2           G9-1          G10-1          G10-2 
+# 12             15             13             14             21              8              7              8 
+# G11-1          G11-2          G12-1          G13-1          G14-1          G15-1          G15-2          G15-3 
+# 16             10             15              8             10             21             10             22 
+# G20-1          G20-4          G20-7 presence_count 
+# 13             25             22             88 
+
+# Remove the "total_count" and presence_count" elements
+species_totals <- species_totals[names(species_totals) != "presence_count" &
+                                 names(species_totals) != "total_count"]
+
+# Add an empty element at the beginning and two at the end so that species_totals can be bound to pc_data2
+species_totals <- c("", species_totals,"","")
+
+# Bind this is a row to pc_data2
+final_data <- rbind(pc_data2, species_totals)
+
+# Save this dataframe as a csv file:
+write.csv(final_data, "final_data.csv", row.names = FALSE)
 
 
 
