@@ -20,6 +20,9 @@ list.files()
 # to the below argument:
 pc_data <- read.csv( "within_plot_data_winter_2026.csv")
 
+# Load the library dplyr needed for data wrangling
+library(dplyr)
+
 # View a sample of the data (OPTIONAL):
 head(pc_data)
 #OR
@@ -30,11 +33,7 @@ class(pc_data)
 
 # Convert the data into a usable form
 
-# Load the library dplyr needed for data wrangling
-library(dplyr)
-
-# Create another table with only the location, common name and count of
-# the individual birds.
+# Create another table with only the location, common name and count of the individual birds.
 pc_data2 <- pc_data %>% 
             group_by(Location, Common.Name) %>% 
             summarize(Count = mean(Count))
@@ -214,7 +213,7 @@ print(meta)
 metest <- cbind(est, meta)
 head(metest)
 
-# Plot
+# Plot the species accumulation curve
                           
 # Load in the "ggplot2" package for plotting the species accumulation curve with the site-wise 
 # abundance and species counts
@@ -285,8 +284,8 @@ get_flextable_defaults()
 # Change the font size
 set_flextable_defaults(font.size = 8)
 
-#data1
-# Convert to flextable
+# data1
+# Convert to data1 into a flextable
 ft <- data1 %>%
   flextable() %>%
   # Merge the "Gomala Number" header
@@ -303,36 +302,40 @@ ft <- data1 %>%
 # Print the table
 ft
 
+# Add the width of the columns based on the width of the number and names of sites
 doc1 <-width(ft, j=2:15, width = 0.32)
 doc1 <-width(doc1, j=16:17, width = 0.38)
-doc1 <-width(doc1, j=1, width = 2)
+doc1 <-width(doc1, j=1, width = 2) # Larger width for site names
 
-#We need in landscape orientation since there are so many sites
+# We need in landscape orientation since there are so many sites
+# Load the "officer" package for this purpose
 library(officer)
 
+# Edit the section properties
 sect_properties <- prop_section(
   page_size = page_size(orient = "landscape", width = 8.3, height = 11.7),
-  type = "continuous",
+  type = "continuous", # the table continues in the next pages (with each page having the header row)
   page_margins = page_mar()
 )   
 
-#highlight numbers greater than 2
+# Highlight numbers greater than 2 (in a light shade of yellow)
 for (col in 2:ncol(data1)) {
   doc1 <- bg(doc1,
            j = col,
            i = which(data1[[col]] > 2),  # Explicitly find rows > 2
-           bg = "#FFEE99",
+           bg = "#FFEE99", # shade of yellow
            part = "body")
 }
 
-
+# Save this table as a docx file
 save_as_docx(doc1, path = "Gomala_Species_Counts1_winter_2026.docx", align = "center", 
              pr_section = sect_properties)
 
+# You can also save this as an html file which can be viewed in any browser
 save_as_html(doc1, path = "Gomala_Species_Counts1_winter_2026.html")
 
 #data2
-# Convert to flextable
+# Convert data2 to flextable
 ft <- data2 %>%
   flextable() %>%
   # Merge the "Gomala Number" header
@@ -349,46 +352,59 @@ ft <- data2 %>%
 # Print the table
 ft
 
+# Adjust the width of the columns
 doc2 <-width(ft, j=2:12, width = 0.39)
 doc2 <-width(doc2, j=1, width = 2)
 
-#highlight numbers greater than 5
+# Highlight numbers greater than 2 (in a light shade of yellow)
 for (col in 2:ncol(data2)) {
   doc2 <- bg(doc2,
              j = col,
              i = which(data2[[col]] > 2),  # Explicitly find rows > 2
-             bg = "#FFEE99",
+             bg = "#FFEE99", # light shade of yellow
              part = "body")
 }
 
+# Save the table in a docx format
 save_as_docx(doc2, path = "Gomala_Species_Counts2_winter_2026.docx", align = "center", 
              pr_section = sect_properties)
 
+# Save as html
 save_as_html(doc2, path = "Gomala_Species_Counts2_winter_2026.html")
 
-#Find out the proportion of sites occupied by the species and the total % of abundance
-#Total abundance = all the number of individuals (averaged across the two temporal
-#replicates)
+# Note that you can even save the entire pc_data2 as in the html format instead of splitting as it 
+# will be easy to view such large tables in browser.
 
-percent_occ <- round((rowSums(pc_data3 > 0)/27), 4)*100
-#where 27 = no. of sites
+# Find out the proportion of sites occupied by the species and the total % of abundance
+# Total abundance = all the number of individuals (averaged across the two temporal
+# replicates)
+                          
+n <- 27 #where 27 = no. of sites (edit it according to how many sites you have)
+percent_occ <- round((rowSums(pc_data3 > 0)/n), 4)*100 # where it is rounded to 2 decimals
 print(percent_occ)
 # [1] 48.15 40.74 11.11 88.89 55.56 33.33 40.74 44.44 62.96 29.63  7.41 59.26 74.07 51.85 22.22  3.70 66.67 18.52  7.41  7.41 40.74
 # [22] 14.81 11.11 18.52  7.41  3.70 22.22  7.41  3.70  7.41 14.81  7.41 11.11 11.11 18.52 18.52  7.41 29.63  3.70 18.52 22.22 11.11
 # [43] 18.52  3.70  3.70  7.41 11.11  3.70  3.70 11.11 29.63  3.70  3.70  3.70 14.81  3.70 11.11  7.41 11.11 11.11  7.41  3.70  3.70
 # [64]  7.41  3.70  3.70  3.70  3.70  3.70  3.70 11.11  7.41  3.70  3.70  7.41  7.41  3.70  3.70  3.70  3.70  3.70  3.70  3.70  3.70
 # [85]  3.70  3.70  3.70  3.70
+                          
 total_abun <- sum(meta$abundance)
-print(total_abun)
+# See the total number of individual birds seen within the entire bird survey duration
+print(total_abun) 
 # [1] 1011
+# See the combined number of individual birds of each species seen within all the sites
 rowSums(pc_data3)
 #  [1]  30  17   5  39  38  14  28  14  36  12   2  24  35  20  12   1 197   8   2   3  15  17   3   7   2   3  26   7   2   5   5
 # [32]   2  16   3   5   5   2  10   1   5  72   3  26   1   2   2   4   1   2   8  14   1   1   1   5   1  34   2   3   4   2   1
 # [63]   9   2  10   2   1   1   1   1   3   2   1   2  80   4   1   1   1  12   1   1   2   1   1   1   1   1
 
+# Calculate the percentage abundance of each species                         
 percent_abun <- round((rowSums(pc_data3)/total_abun)*100,2)
 
+# Create a dataframe containing the percentage occurrence and percentage abundance for each species
 proportions <- as.data.frame(cbind(pc_data2$Species, percent_occ, percent_abun))
+
+# Check the first 6 observations of this datafrae
 head(proportions)
 #                      V1 percent_occ percent_abun
 # 1 Asian Green Bee-eater       48.15         2.97
@@ -398,13 +414,10 @@ head(proportions)
 # 5  Ring-necked Parakeet       55.56         3.76
 # 6       Sykes's Warbler       33.33         1.38
 
+# Rename the colummn headers
 proportions <- proportions %>% rename(Species = V1,
                        "% occurrence across point counts" = percent_occ,
                        "% of total abundance" = percent_abun)
-
-library(flextable)
-library(officer)
-library(dplyr)
 
 # Create a flextable with 3 repeating columns
 ft <- proportions %>%
@@ -444,45 +457,19 @@ sect_properties <- prop_section(
 save_as_docx(ft, path = "compact_species_report_winter_2026.docx", 
              pr_section = sect_properties)
 
+# Check the structure of the 'proportions' object
 str(proportions)
 # 'data.frame':	88 obs. of  3 variables:
-#   $ Species                         : chr  "Asian Green Bee-eater" "Booted Warbler" "Feral Pigeon" "Purple Sunbird" ...
+# $ Species                         : chr  "Asian Green Bee-eater" "Booted Warbler" "Feral Pigeon" "Purple Sunbird" ...
 # $ % occurrence across point counts: chr  "48.15" "40.74" "11.11" "88.89" ...
 # $ % of total abundance            : chr  "2.97" "1.68" "0.49" "3.86" ...
 
-#The 2nd and 3rd column has to be converted to numeric, since they are currently
-#shown as characters:
+# The 2nd and 3rd column has to be converted to numeric, since they are currently
+# shown as characters:
 proportions$`% occurrence across point counts` <- as.numeric(proportions$`% occurrence across point counts`)
 proportions$`% of total abundance` <- as.numeric(proportions$`% of total abundance`)
 
-# #Check the species having the minimum % abundance:
-# proportions$Species[which.min(proportions$`% of total abundance`)]
-# # [1] "Asian Woolly-necked Stork"
-# #Find the min proportion of Asian Woolly-necked Stork
-# min(proportions$`% of total abundance`)
-# #[1] 0.1
-# #Check the species having the maximum % abundance:
-# proportions$Species[which.max(proportions$`% of total abundance`)]
-# # [1] "Barn Swallow"
-# #Find the max proportion of Barn Swallow
-# max(proportions$`% of total abundance`)
-# # [1] 19.49
-# 
-# 
-# #Check the species having the minimum % occurrence:
-# proportions$Species[which.min(proportions$`% occurrence across point counts`)]
-# # [1] "Asian Woolly-necked Stork"
-# #Find the min proportion of Asian Woolly-necked Stork
-# min(proportions$`% occurrence across point counts`)
-# #[1] 3.7
-# #Check the species having the maximum % occurrence:
-# proportions$Species[which.max(proportions$`% occurrence across point counts`)]
-# # [1] "Purple Sunbird"
-# #Find the max proportion of Purple Sunbird
-# max(proportions$`% occurrence across point counts`)
-# # [1] 88.89
-
-#Check the species having the minimum % abundance:
+# Check the species having the minimum % abundance:
 proportions$Species[proportions$`% of total abundance` == min(proportions$`% of total abundance`)]
 # [1] "Asian Woolly-necked Stork" "Barred Buttonquail"        "Indian Golden Oriole"      "Red-whiskered Bulbul"     
 # [5] "Coppersmith Barbet"        "Greater Coucal"            "Grey Heron"                "Pied Kingfisher"          
@@ -490,18 +477,18 @@ proportions$Species[proportions$`% of total abundance` == min(proportions$`% of 
 # [13] "Streak-throated Swallow"   "Wood Sandpiper"            "Red-wattled Lapwing"       "Common Babbler"           
 # [17] "Pin-tailed Snipe"          "Rufous Treepie"            "Common Iora"               "Crested Honey-buzzard"    
 # [21] "Grey Francolin"            "Indian Peafowl"            "River Tern"                "Grey Wagtail"   
-#So, there are 24 such species.
-#Find the min proportion of the species with the minimum % occurrence
+# So, there are 24 such species.
+# Find the min proportion of the species with the minimum % occurrence
 min(proportions$`% of total abundance`)
 #[1] 0.1
-#Check the species having the maximum % abundance:
+# Check the species having the maximum % abundance:
 proportions$Species[proportions$`% of total abundance` == max(proportions$`% of total abundance`)]
 # [1] "Barn Swallow"
-#Find the max proportion of the species with the maximum % occurrence
+# Find the max proportion of the species with the maximum % occurrence
 max(proportions$`% of total abundance`)
 # [1] 19.49
 
-#Check the species having the minimum % occurrence (this corresponds to the species 
+# Check the species having the minimum % occurrence (this corresponds to the species 
 # which appears in the least number of sites):
 proportions$Species[proportions$`% occurrence across point counts` == min(proportions$`% occurrence across point counts`)]
 # [1] "Asian Woolly-necked Stork" "Rock Bush-Quail"           "Baya Weaver"               "Barred Buttonquail"       
@@ -513,15 +500,15 @@ proportions$Species[proportions$`% occurrence across point counts` == min(propor
 # [25] "Pin-tailed Snipe"          "House Crow"                "Rufous Treepie"            "Common Iora"              
 # [29] "Yellow-eyed Babbler"       "Crested Honey-buzzard"     "Grey Francolin"            "Indian Peafowl"           
 # [33] "River Tern"                "Grey Wagtail"  
-#So, there are 34 such species.
-#Find the min proportion of the species with the minimum proportion:
+# So, there are 34 such species.
+# Find the min proportion of the species with the minimum proportion:
 min(proportions$`% occurrence across point counts`)
 #[1] 3.7
-#Check the species having the maximum % occurrence (this corresponds to the species 
+# Check the species having the maximum % occurrence (this corresponds to the species 
 # which appears in the maximum number of sites):
 proportions$Species[proportions$`% occurrence across point counts` == max(proportions$`% occurrence across point counts`)]
 # [1] "Purple Sunbird"
-#Find the max proportion of the species with the maximum % occurrence:
+# Find the max proportion of the species with the maximum % occurrence:
 max(proportions$`% occurrence across point counts`)
 # [1] 88.89
 
