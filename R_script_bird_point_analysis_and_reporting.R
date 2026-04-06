@@ -72,20 +72,25 @@ library(tidyr)
 # Pivot the table:
 pc_data2 <- pivot_wider(pc_data2, names_from = Location, values_from = Count)
 
-#Convert all the NAs to zeroes
+# Convert all the NAs to zeroes:
 pc_data2[is.na(pc_data2)] <- 0
 
+# Convert to a dataframe:
 pc_data2 <- as.data.frame(pc_data2)
 
+# Check the structure (OPTIONAL)
 str(pc_data2)
 
-#Remove the row with 'bird sp.'
+# Remove the row with 'bird sp.' (if you have a 'bird sp.' in your data). 
+# In a similar way, you can remove the species identified to only the genus level if you want to.
 pc_data2 <- pc_data2 %>% filter(Common.Name != "bird sp.")
 
-#Rename the column "G20-1 Latest" to "G-20"
+# If you have any location names that need renaming, you can do the following. 
+# In this case, the column "G20-1 Latest" is being renamed to "G20-1".
 pc_data2 <- rename(pc_data2, "G20-1" = "G20-1 Latest")
 
-#Reorder the gomala numbers
+# The location names can be reordered based on the numbers.
+# In this case, we will reorder gomala numbers
 
 # Get all column names except "Common.Name"
 col_names <- names(pc_data2)[-1]
