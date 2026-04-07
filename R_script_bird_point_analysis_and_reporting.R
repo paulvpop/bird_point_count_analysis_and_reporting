@@ -57,7 +57,7 @@ library(dplyr)
 
 # If the pc_data contains data for only one season, then further processing is not necessary. However,
 # if it contains data from multiple seasons/years, only the data for the current season (winter 2026
-# in this example) should be retained. Filter out the rest:
+# in this example) should be retained. Filter out the rest.
 
 # Convert to date format and filter to the selected data range in one step:
 pc_data <- pc_data %>%
@@ -82,7 +82,7 @@ unique(filtered_data$Scientific.Name)
 
 # If any of them are not at the species level, and there are others from the same
 # genus at the species level, remove them from the total count in the previous step.
-# In this case, "Aves sp." is not at the species level. So, total count of species
+# In this case, "Aves sp." is not at the species level. So, total count of species observed
 # during the study duration was 108.
 
 # Convert the data into a usable form
