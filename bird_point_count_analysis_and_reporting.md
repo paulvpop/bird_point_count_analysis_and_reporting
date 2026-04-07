@@ -3,7 +3,7 @@
 >This research was carried out under the BIRD lab, ATREE, Bengaluru (PI: Rajkamal Goswami).
 >
 >*Version 1.0 - last updated 2026-04-07 <br>
->Last update - Introduction*
+>Last update - Added images*
 >
 >View the most current version at https://github.com/paulvpop/bird_point_count_analysis_and_reporting/blob/main/bird_point_count_analysis_and_reporting.md
 
@@ -360,6 +360,9 @@ SAC <- ggplot(metest, aes(x = factor(site, levels = unique(site)), y = S.obs)) +
 
 print(SAC)
 ````
+<img width="3600" height="2100" alt="SAC_winter_2026" src="https://github.com/user-attachments/assets/69f6219b-454b-4afd-951e-6f101c83da8e" />
+
+
 Save the plot in a specified width and height format with publication ready 300 dots per
 inch resolution.
 ```
@@ -453,6 +456,9 @@ Save this table as a docx file
 save_as_docx(doc1, path = "Gomala_Species_Counts1_winter_2026.docx", align = "center", 
              pr_section = sect_properties)
 ```
+<img width="654" height="850" alt="image" src="https://github.com/user-attachments/assets/ff0a6b1c-cd34-4454-8838-88df05b5dc4e" />
+
+
 You can also save this as an html file which can be viewed in any browser
 ```
 save_as_html(doc1, path = "Gomala_Species_Counts1_winter_2026.html")
@@ -599,6 +605,8 @@ Save to Word with 3 text columns
 save_as_docx(ft, path = "compact_species_report_winter_2026.docx", 
              pr_section = sect_properties)
 ```
+<img width="337" height="834" alt="image" src="https://github.com/user-attachments/assets/c86b0b21-17aa-4550-8b13-645dcc3852dc" />
+
 Check the structure of the 'proportions' object
 ```
 str(proportions)
