@@ -608,8 +608,8 @@ species_totals
 # 12             15             13             14             21              8              7              8 
 # G11-1          G11-2          G12-1          G13-1          G14-1          G15-1          G15-2          G15-3 
 # 16             10             15              8             10             21             10             22 
-# G20-1          G20-4          G20-7 presence_count 
-# 13             25             22             88 
+# G20-1          G20-4          G20-7    total_count presence_count 
+# 13             25             22             88             88 
 
 # Remove the "total_count" and presence_count" elements
 species_totals <- species_totals[names(species_totals) != "presence_count" &
