@@ -360,7 +360,7 @@ SAC <- ggplot(metest, aes(x = factor(site, levels = unique(site)), y = S.obs)) +
 
 print(SAC)
 ````
-<img width="1000" height="600" alt="SAC_winter_2026" src="https://github.com/user-attachments/assets/69f6219b-454b-4afd-951e-6f101c83da8e" />
+<img width="750" height="500" alt="SAC_winter_2026" src="https://github.com/user-attachments/assets/69f6219b-454b-4afd-951e-6f101c83da8e" />
 
 
 Save the plot in a specified width and height format with publication ready 300 dots per
