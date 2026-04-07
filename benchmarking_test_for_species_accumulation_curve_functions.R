@@ -17,6 +17,11 @@ list.files()
 #to the below argument:
 sp_data <- read.csv( "Choodasandra_4thJan2025_Table.csv")
 
+# Load necessary packages 
+library(dplyr)
+library(tibble)
+library(vegan)
+
 #View a sample of the data:
 head(sp_data)
 #     Point.Count.Numbers X1 X2 X3 X4 X5 X6 X7
