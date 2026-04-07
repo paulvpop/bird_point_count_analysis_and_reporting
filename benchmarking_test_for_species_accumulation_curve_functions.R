@@ -1,6 +1,15 @@
+# Code and documentation authored by Paul Pop.
+
+# This research was carried out under the BIRD lab, ATREE, Bengaluru (PI: Rajkamal Goswami).
+
+# Version 1.0 - last updated 2026-04-07 <br>
+# Last update - Introduction*
+
+# View the most current version at https://github.com/paulvpop/bird_point_count_analysis_and_reporting/blob/main/bird_point_count_analysis_and_reporting.md
+
 # Authored by Paul Pop
 # This R script tests which of the functions available in different R packages does the job of the creation of
-# species accumulation curves the fastest and without error.
+# species accumulation curve the fastest and without error.
 
 # This was tested using data of multiple point counts of birds in a single day at the Choodasandra.
 
