@@ -4,24 +4,44 @@ This is document illustrates the use of an R script for creating a species accum
 the same plot as richness (no. of species) and abundance (no. of individuals of each 
 species).
 
-Before running this script, make sure that you have a cleaned version of the eBird data from
-only the point count surveys (including thorough check for correctness in identification of
-the species).
+This script assumes that you collect the information using eBird (either uploaded immediately after
+the surveys when there is connectivity and device charge, or uploaded when back in the field station or
+area with connectivity). When creating checklists, note down the weather or site covariates that you need
+for any analysis in the comment section using a consistent delimiter like semi-colon. For example,
+Moderate breeze; clear blue skies; slightly warm; quite sunny. Since there are most likely going to be 
+checklists prepared outside of the specific point count duration or point count sites also, but within the 
+entire study duration in the broader study area, create an eBird account specifically for the point counts 
+(usually using the lab/institutional email). You should create the checklists using your own account but 
+share only the checklists within the point sites and point count duration with the point count eBird account. 
+In addition, even during the point counts, note down the species heard or seen outside the point count radius 
+in your personal eBird checklist. Make notes on how many species were heard/seen outside or inside the plot so 
+the ones outside the radius can be removed from the checklist in the point count eBird account to have a cleaned 
+data record for analysis. This two-account procedure ensure that you can contribute useful complete eBird checklists
+to broader publicly-available scientific data, helping aid participatory science. This also ensures that you have 
+a cleaned dataset for your specific single-season point count analysis. 
+
+Download the eBird data from both your personal and the point count data profile.
+See the procedure for downloading eBird data in [my documentation here](https://github.com/paulvpop/supporting-code-for-A-large-scale-crowd-sourced-acoustic-dataset-of-Indian-fauna/blob/main/annotations_to_final_submission_file.md#download-your-ebird-data)
+
+Before running this script, make sure that you have a cleaned versions of the eBird data from
+only the point count surveys as well as including everything (from personal account). This includes thorough check for 
+correctness in identification of the species. The following steps can be used to do this.
 
 Set the working directory to wherever you like (ideally something related to the code):
-
 ```
 setwd("D:/Paul_Pop_Birds/Paul_Pop_Bagepalli")
 ```
 Check the current working to see if the changes have been made (from where files will be loaded to 
 and saved by default)
+```
 getwd()
-
-List the files in the working directory to see if data needed to be loaded is there... 
+```
+List the files in the working directory to see if data needed to be loaded is there. 
 ```
 list.files()
 ```
-and copy-paste the filtered and cleaned eBird data file ("within_plot_data_winter_2026.csv" in this case) 
+and copy-paste the filtered and cleaned eBird data file for only the point counts (renamed 
+"within_plot_data_winter_2026.csv" from "MyEBirdData.csv" in this case) 
 to the below argument:
 ```
 pc_data <- read.csv( "within_plot_data_winter_2026.csv")
@@ -34,15 +54,50 @@ View a sample of the data (OPTIONAL):
 ```
 head(pc_data)
 ```
-#OR
+OR
 ```
 dplyr::glimpse(pc_data)
 ```
-
 Check the class of the data (OPTIONAL)
 ```
 class(pc_data)
 ```
+
+If the pc_data contains data for only one season, then further processing is not necessary. However,
+if it contains data from multiple seasons/years, only the data for the current season (winter 2026
+in this example) should be retained. Filter out the rest.
+
+Convert to date format and filter to the selected data range in one step:
+```
+pc_data <- pc_data %>%
+            mutate(Date = as.Date(Date)) %>%
+            filter(Date >= "2026-01-19", Date <= "2026-01-24")
+```
+Similarly, load in the complete data from the person account which contains data from outside the 
+point count surveys but within the study area and duration:
+```
+all_data <- read.csv( "all_data_winter_2026.csv")
+```
+Filter it to the required date range:
+```
+all_data <- all_data %>%
+            mutate(Date = as.Date(Date)) %>%
+            filter(Date >= "2026-01-19", Date <= "2026-01-24")
+```
+Count the unique number of species
+```
+length(unique(filtered_data$Scientific.Name))
+[1] 109
+```
+See the unique species:
+```
+unique(filtered_data$Scientific.Name)
+```
+If any of them are not at the species level, and there are others from the same
+genus at the species level, remove them from the total count in the previous step.
+In this case, "Aves sp." is not at the species level. So, total count of species observed
+during the study duration was 108.
+
 Convert the data into a usable form
 
 Create another table with only the location, common name and count of the individual birds.
@@ -154,8 +209,7 @@ Uncomment (remove hash) and install a package necessary for the species accumula
 library("fossil")
 ```
 spp.est is the R equivalent of the software EstimateS. It is found within the package "fossil".
-Reference for the spp.est function 
-https://palaeo-electronica.org/2011_1/238/estimate.htm#:~:text=The%20spp.,of%20randomizations%20should%20be%20run
+[Here is the Reference](https://palaeo-electronica.org/2011_1/238/estimate.htm#:~:text=The%20spp.,of%20randomizations%20should%20be%20run) for the spp.est function 
 
 Remove the species name column (the first column)
 ```
