@@ -478,13 +478,13 @@ proportions$Species[proportions$`% of total abundance` == min(proportions$`% of 
 # [17] "Pin-tailed Snipe"          "Rufous Treepie"            "Common Iora"               "Crested Honey-buzzard"    
 # [21] "Grey Francolin"            "Indian Peafowl"            "River Tern"                "Grey Wagtail"   
 # So, there are 24 such species.
-# Find the min proportion of the species with the minimum % occurrence
+# Find the min proportion of the species with the minimum % abundance:
 min(proportions$`% of total abundance`)
 #[1] 0.1
 # Check the species having the maximum % abundance:
 proportions$Species[proportions$`% of total abundance` == max(proportions$`% of total abundance`)]
 # [1] "Barn Swallow"
-# Find the max proportion of the species with the maximum % occurrence
+# Find the max proportion of the species with the maximum % abundance
 max(proportions$`% of total abundance`)
 # [1] 19.49
 
@@ -501,7 +501,7 @@ proportions$Species[proportions$`% occurrence across point counts` == min(propor
 # [29] "Yellow-eyed Babbler"       "Crested Honey-buzzard"     "Grey Francolin"            "Indian Peafowl"           
 # [33] "River Tern"                "Grey Wagtail"  
 # So, there are 34 such species.
-# Find the min proportion of the species with the minimum proportion:
+# Find the min proportion of the species with the minimum % occurrence:
 min(proportions$`% occurrence across point counts`)
 #[1] 3.7
 # Check the species having the maximum % occurrence (this corresponds to the species 
