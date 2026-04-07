@@ -5,9 +5,8 @@
 # Version 1.0 - last updated 2026-04-07 <br>
 # Last update - Introduction*
 
-# View the most current version at https://github.com/paulvpop/bird_point_count_analysis_and_reporting/blob/main/bird_point_count_analysis_and_reporting.md
+# View the most current version at https://github.com/paulvpop/bird_point_count_analysis_and_reporting/blob/main/benchmarking_test_for_species_accumulation_curve_functions.R
 
-# Authored by Paul Pop
 # This R script tests which of the functions available in different R packages does the job of the creation of
 # species accumulation curve the fastest and without error.
 
