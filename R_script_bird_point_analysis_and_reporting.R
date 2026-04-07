@@ -41,6 +41,9 @@ list.files()
 # to the below argument:
 pc_data <- read.csv( "within_plot_data_winter_2026.csv")
 
+# Load the library dplyr needed for data wrangling
+library(dplyr)
+
 # View a sample of the data (OPTIONAL):
 head(pc_data)
 #OR
