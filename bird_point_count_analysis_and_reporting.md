@@ -1,4 +1,9 @@
-Code and documentation authored by Paul Pop
+Code and documentation authored by Paul Pop.
+
+This research was carried out under the BIRD lab, ATREE, Bengaluru (PI: Rajkamal Goswami).
+
+*Version 1.0 - last updated 2026-04-07
+Last update - introduction*
 
 This is document illustrates the use of an R script for creating a species accumulation curve for your study area plotted on 
 the same plot as richness (no. of species) and abundance (no. of individuals of each 
