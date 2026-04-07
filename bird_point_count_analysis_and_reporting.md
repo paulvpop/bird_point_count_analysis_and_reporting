@@ -2,14 +2,15 @@ Code and documentation authored by Paul Pop.
 
 This research was carried out under the BIRD lab, ATREE, Bengaluru (PI: Rajkamal Goswami).
 
-*Version 1.0 - last updated 2026-04-07
-Last update - introduction*
+*Version 1.0 - last updated 2026-04-07 <br>
+Last update - Introduction*
 
 View the most current version at https://github.com/paulvpop/bird_point_count_analysis_and_reporting/blob/main/bird_point_count_analysis_and_reporting.md
 
+<br><br>
+
 This is document illustrates the use of an R script for creating a species accumulation curve for your study area plotted on 
-the same plot as richness (no. of species) and abundance (no. of individuals of each 
-species).
+the same plot as richness (no. of species) and abundance (no. of individuals of each species).
 
 This script assumes that you collect the information using eBird (either uploaded immediately after
 the surveys when there is connectivity and device charge, or uploaded when back in the field station or
@@ -722,8 +723,8 @@ species_totals
 # 12             15             13             14             21              8              7              8 
 # G11-1          G11-2          G12-1          G13-1          G14-1          G15-1          G15-2          G15-3 
 # 16             10             15              8             10             21             10             22 
-# G20-1          G20-4          G20-7 presence_count 
-# 13             25             22             88 
+# G20-1          G20-4          G20-7    total_count presence_count 
+# 13             25             22             88             88 
 ````
 Remove the "total_count" and presence_count" elements
 ```
