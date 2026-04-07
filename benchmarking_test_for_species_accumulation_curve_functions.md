@@ -188,7 +188,7 @@ system.time({par.spp.est(fdata.mat, rand = 100, abund = TRUE, counter = FALSE)})
 # user  system elapsed 
 # 0.02    0.00    0.17 
 ```
-# Always stop the cluster after use:
+Always stop the cluster after use:
 ```
 stopCluster(cl)
 ```
