@@ -5,6 +5,8 @@ This research was carried out under the BIRD lab, ATREE, Bengaluru (PI: Rajkamal
 *Version 1.0 - last updated 2026-04-07
 Last update - introduction*
 
+View the most current version at https://github.com/paulvpop/bird_point_count_analysis_and_reporting/edit/main/bird_point_count_analysis_and_reporting.md
+
 This is document illustrates the use of an R script for creating a species accumulation curve for your study area plotted on 
 the same plot as richness (no. of species) and abundance (no. of individuals of each 
 species).
